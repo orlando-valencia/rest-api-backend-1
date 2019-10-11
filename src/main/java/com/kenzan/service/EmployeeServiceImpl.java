@@ -17,22 +17,38 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	
 	@Override
 	public Optional<Employee> findById(Integer id) {
-		return null;
+		return employeeRepository.findById(id);
 	}
 
 	@Override
 	public Employee createEmployee(Employee employee) {
-		return null;
+		return employeeRepository.save(employee);
 	}
 
 	@Override
 	public Employee updateEmployee(Employee employee) {
-		return null;
+		Optional<Employee> e = employeeRepository.findById(employee.getId());
+		
+		if(employeeRepository.findById(employee.getId()) != null) {
+			e.get().setFirstName(employee.getFirstName());
+			e.get().setLastName(employee.getLastName());
+			e.get().setDateOfBirth(employee.getDateOfBirth());
+			e.get().setDateOfEmployment(employee.getDateOfEmployment());
+			e.get().setStatus(employee.getStatus());
+		}
+		return e.get();
 	}
 
 	@Override
 	public Boolean deleteEmployee(Integer id) {
-		return null;
+		Optional<Employee> e = employeeRepository.findById(id);
+		
+		if(employeeRepository.findById(id) != null) {
+			e.get().setStatus(0);
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override

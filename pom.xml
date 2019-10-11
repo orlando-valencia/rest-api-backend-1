@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.kenzan</groupId>
-	<artifactId>rest-api-backend</artifactId>
+	<artifactId>rest-api-backend-1</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>rest-api-backend</name>
+	<name>rest-api-backend-1</name>
 	<description>Employee CRUD</description>
 
 	<properties>
