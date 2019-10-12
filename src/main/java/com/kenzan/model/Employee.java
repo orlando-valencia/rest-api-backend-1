@@ -11,59 +11,68 @@ import javax.persistence.Table;
 @Entity
 @Table(name="employee")
 public class Employee {
-	private Integer id;
+	private Long id;
 	private String firstName;
+	private char middleInitial;
 	private String lastName;
 	private LocalDate dateOfBirth;
 	private LocalDate dateOfEmployment;
 	private int status;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Integer getId() {
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public Long getId() {
 		return id;
 	}
-	
-	public void setId(Integer id) {
+
+	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public String getFirstName() {
 		return firstName;
 	}
-	
+
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-	
+
+	public char getMiddleInitial() {
+		return middleInitial;
+	}
+
+	public void setMiddleInitial(char middleInitial) {
+		this.middleInitial = middleInitial;
+	}
+
 	public String getLastName() {
 		return lastName;
 	}
-	
+
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	
+
 	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
-	
+
 	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
-	
+
 	public LocalDate getDateOfEmployment() {
 		return dateOfEmployment;
 	}
-	
+
 	public void setDateOfEmployment(LocalDate dateOfEmployment) {
 		this.dateOfEmployment = dateOfEmployment;
 	}
-	
+
 	public int getStatus() {
 		return status;
 	}
-	
+
 	public void setStatus(int status) {
 		this.status = status;
 	}
@@ -95,8 +104,8 @@ public class Employee {
 
 	@Override
 	public String toString() {
-		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", dateOfBirth="
+		return "Employee [id=" + id + ", firstName=" + firstName + ", middleName=" + middleInitial + ", lastName=" + lastName + ", dateOfBirth="
 				+ dateOfBirth + ", dateOfEmployment=" + dateOfEmployment + ", status=" + status + "]";
 	}
-	
+
 }

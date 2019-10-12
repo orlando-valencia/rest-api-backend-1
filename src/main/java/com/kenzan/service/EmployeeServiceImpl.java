@@ -2,6 +2,7 @@ package com.kenzan.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,44 +17,60 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	private EmployeeRepository employeeRepository;
 	
 	@Override
-	public Optional<Employee> findById(Integer id) {
+	public Optional<Employee> findById(Long id) {
 		return employeeRepository.findById(id);
 	}
 
 	@Override
-	public Employee createEmployee(Employee employee) {
+	public Employee saveEmployee(Employee employee) {
 		return employeeRepository.save(employee);
 	}
 
 	@Override
 	public Employee updateEmployee(Employee employee) {
-		Optional<Employee> e = employeeRepository.findById(employee.getId());
+		Optional<Employee> updatedEmployee = employeeRepository.findById(employee.getId());
 		
 		if(employeeRepository.findById(employee.getId()) != null) {
-			e.get().setFirstName(employee.getFirstName());
-			e.get().setLastName(employee.getLastName());
-			e.get().setDateOfBirth(employee.getDateOfBirth());
-			e.get().setDateOfEmployment(employee.getDateOfEmployment());
-			e.get().setStatus(employee.getStatus());
+			updatedEmployee.get().setFirstName(employee.getFirstName());
+			updatedEmployee.get().setMiddleInitial(employee.getMiddleInitial());
+			updatedEmployee.get().setLastName(employee.getLastName());
+			updatedEmployee.get().setDateOfBirth(employee.getDateOfBirth());
+			updatedEmployee.get().setDateOfEmployment(employee.getDateOfEmployment());
+			updatedEmployee.get().setStatus(employee.getStatus());
 		}
-		return e.get();
+		
+		employeeRepository.save(updatedEmployee.get());
+		
+		return updatedEmployee.get();
 	}
 
 	@Override
-	public Boolean deleteEmployee(Integer id) {
-		Optional<Employee> e = employeeRepository.findById(id);
-		
+	public Employee deactivateEmployee(Long id) {
+		Optional<Employee> employee = employeeRepository.findById(id);
 		if(employeeRepository.findById(id) != null) {
-			e.get().setStatus(0);
-			return true;
+			employee.get().setStatus(0);
 		}
-		
-		return false;
+		employeeRepository.save(employee.get());
+		return employee.get();
+	}
+	
+	@Override
+	public Employee activateEmployee(Long id) {
+		Optional<Employee> employee = employeeRepository.findById(id);
+		if(employeeRepository.findById(id) != null) {
+			employee.get().setStatus(1);
+		}
+		employeeRepository.save(employee.get());
+		return employee.get();
 	}
 
 	@Override
 	public List<Employee> findAll() {
-		return employeeRepository.findAll();
+		List<Employee> employees = employeeRepository.findAll();
+		
+		return employees.stream().
+			    filter(employee -> employee.getStatus() == 1).
+			    collect(Collectors.toList());
 	}
 
 }
