@@ -15,7 +15,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
-	
+
 	@Override
 	public Optional<Employee> findById(Long id) {
 		return employeeRepository.findById(id);
@@ -28,49 +28,49 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 	@Override
 	public Employee updateEmployee(Employee employee) {
-		Optional<Employee> updatedEmployee = employeeRepository.findById(employee.getId());
-		
-		if(employeeRepository.findById(employee.getId()) != null) {
-			updatedEmployee.get().setFirstName(employee.getFirstName());
-			updatedEmployee.get().setMiddleInitial(employee.getMiddleInitial());
-			updatedEmployee.get().setLastName(employee.getLastName());
-			updatedEmployee.get().setDateOfBirth(employee.getDateOfBirth());
-			updatedEmployee.get().setDateOfEmployment(employee.getDateOfEmployment());
-			updatedEmployee.get().setStatus(employee.getStatus());
-		}
-		
-		employeeRepository.save(updatedEmployee.get());
-		
-		return updatedEmployee.get();
+		return employeeRepository.findById(employee.getId()).
+				map(em -> {
+					em.setFirstName(employee.getFirstName());
+					em.setMiddleInitial(employee.getMiddleInitial());
+					em.setLastName(employee.getLastName());
+					em.setDateOfBirth(employee.getDateOfBirth());
+					em.setDateOfEmployment(employee.getDateOfEmployment());
+					em.setStatus(employee.getStatus());
+					return employeeRepository.save(em);
+				}).orElseGet(() -> {
+					return employee;
+				});
 	}
 
 	@Override
 	public Employee deactivateEmployee(Long id) {
-		Optional<Employee> employee = employeeRepository.findById(id);
-		if(employeeRepository.findById(id) != null) {
-			employee.get().setStatus(0);
-		}
-		employeeRepository.save(employee.get());
-		return employee.get();
+
+		return employeeRepository.findById(id).
+				map(em -> {
+					em.setStatus(0);
+					employeeRepository.save(em);
+					return em;
+				}).orElseThrow(null);
 	}
-	
+
 	@Override
 	public Employee activateEmployee(Long id) {
-		Optional<Employee> employee = employeeRepository.findById(id);
-		if(employeeRepository.findById(id) != null) {
-			employee.get().setStatus(1);
-		}
-		employeeRepository.save(employee.get());
-		return employee.get();
+
+		return employeeRepository.findById(id).
+				map(em -> {
+					em.setStatus(1);
+					employeeRepository.save(em);
+					return em;
+				}).orElseThrow(null);
 	}
 
 	@Override
 	public List<Employee> findAll() {
 		List<Employee> employees = employeeRepository.findAll();
-		
+
 		return employees.stream().
-			    filter(employee -> employee.getStatus() == 1).
-			    collect(Collectors.toList());
+				filter(employee -> employee.getStatus() == 1).
+				collect(Collectors.toList());
 	}
 
 }

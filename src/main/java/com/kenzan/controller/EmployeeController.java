@@ -27,11 +27,11 @@ public class EmployeeController {
 	// - Get employees by an ID
 	@GetMapping("/employees/{id}")
 	public Employee getEmployee(@PathVariable Long id) {
-		Optional<Employee> employee = employeeService.findById(id);
-		if(!employee.isPresent()) {
-			return null;
-		}
-		return employee.get();
+
+		return 	employeeService.findById(id).stream()
+		.filter(e -> e == null || e.getStatus() != 0)
+		.findAny()
+		.orElse(null);
 	}
 	
 	// - Create new employees
