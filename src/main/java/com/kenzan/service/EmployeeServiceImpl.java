@@ -47,8 +47,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 		return employeeRepository.findById(id).
 				map(em -> {
-					em.setStatus(0);
-					employeeRepository.save(em);
+					if(em != null) {
+						em.setStatus(0);
+						employeeRepository.save(em);
+					}
 					return em;
 				}).orElseThrow(null);
 	}
@@ -58,8 +60,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 		return employeeRepository.findById(id).
 				map(em -> {
-					em.setStatus(1);
-					employeeRepository.save(em);
+					if(em != null) {
+						em.setStatus(1);
+						employeeRepository.save(em);
+					}
 					return em;
 				}).orElseThrow(null);
 	}
